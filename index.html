@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>武汉天气</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500&family=Fira+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FAFAFA;--bg-card:#FFFFFF;--bg-hover:#F5F5F5;--text:#171717;--text-dim:#525252;--text-muted:#A3A3A3;--border:#E5E5E5;--border-hover:#A3A3A3;--accent:#171717;--transition:200ms ease}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Fira Sans',-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:stretch;justify-content:center;padding:0}
+.container{width:100%}
+.header{margin-bottom:40px}
+.header h1{font-size:.85rem;font-weight:400;letter-spacing:.2em;color:var(--text-dim);text-transform:uppercase;display:flex;align-items:center;gap:12px}
+.header h1::before{content:"";width:24px;height:1px;background:var(--text-dim);display:inline-block}
+.header .badge{display:inline-block;font-size:.7rem;font-weight:400;color:var(--text-muted);letter-spacing:.15em;text-transform:uppercase}
+.header .time{font-size:.7rem;color:var(--text-muted);margin-top:12px;font-family:'Fira Code',monospace;letter-spacing:.05em}
+.card{background:var(--bg-card);border:1px solid var(--border);padding:32px 36px;margin-bottom:1px;transition:border-color var(--transition)}
+.card:first-of-type{border-bottom:none}
+.card:hover{border-color:var(--border-hover)}
+.temp-block{margin-bottom:32px}
+.temp-block .icon-svg{width:48px;height:48px;margin-bottom:16px}
+.temp-block .icon-svg svg{width:100%;height:100%;opacity:.7}
+.temp-main{display:flex;align-items:baseline;gap:12px}
+.temp-block .temp-num{font-size:5rem;font-weight:300;line-height:1;color:var(--text);font-family:'Fira Code',monospace;letter-spacing:-.03em}
+.temp-block .weather-label{font-size:1rem;color:var(--text-dim);font-weight:400}
+.temp-block .temp-feel{font-size:.8rem;color:var(--text-muted);margin-top:4px;font-family:'Fira Code',monospace;letter-spacing:.02em}
+.details{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)}
+.detail{cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:20px 12px;background:var(--bg-card);border:1px solid transparent;transition:background var(--transition),transform .5s cubic-bezier(.34,1.56,.64,1),border-color var(--transition);position:relative}
+.detail:active{animation:shake .5s cubic-bezier(.36,.07,.19,.97)}
+.detail:hover{background:var(--bg-hover);transform:scale(1.04)}
+.detail::after{content:"";position:absolute;bottom:8px;left:50%;width:0;height:2px;background:var(--accent);transform:translateX(-50%);transition:width .25s ease}
+.detail:hover::after{width:32px}
+.detail svg{width:16px;height:16px;flex-shrink:0;opacity:.4}
+.detail .d-value{font-size:.85rem;font-weight:500;color:var(--text);font-family:'Fira Code',monospace;letter-spacing:-.01em}
+.detail .d-label{font-size:.6rem;color:var(--text-muted);font-weight:400;text-transform:uppercase;letter-spacing:.12em}
+.section-label{font-size:.65rem;font-weight:400;color:var(--text-muted);text-transform:uppercase;letter-spacing:.15em;padding:16px 36px 0;background:var(--bg-card);border-left:1px solid var(--border);border-right:1px solid var(--border)}
+.hourly-wrap{background:rgba(0,0,0,.03);margin-bottom:1px}
+.hourly-scroll{display:flex;gap:0;padding:16px 36px 20px;background:var(--bg-card);border:1px solid var(--border);border-top:none;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:var(--text-muted) transparent}
+.hourly-scroll::-webkit-scrollbar{height:1px};display:none
+.hourly-scroll::-webkit-scrollbar-thumb{background:var(--text-muted)}
+.hour-item{cursor:pointer;flex:0 0 60px;text-align:center;padding:10px 4px;position:relative;border:1px solid transparent;transition:background var(--transition),transform .5s cubic-bezier(.34,1.56,.64,1),border-color var(--transition)}
+.hour-item:active{animation:shake .5s cubic-bezier(.36,.07,.19,.97)}
+.hour-item:hover{background:var(--bg-hover);transform:scale(1.06)}
+.hour-item::after{content:"";position:absolute;bottom:4px;left:50%;width:0;height:2px;background:var(--accent);transform:translateX(-50%);transition:width .25s ease}
+.hour-item:hover::after{width:28px}
+.hour-item.now{background:var(--accent);border-color:var(--accent)}
+.hour-item.now .h-time,.hour-item.now .h-temp,.hour-item.now .h-rain{color:#FFF}
+.hour-item.now .h-icon svg{stroke:#FFF}
+.hour-item.now:hover{background:#2A2A2A;border-color:#2A2A2A;transform:scale(1.06)}
+.h-time{font-size:.65rem;color:var(--text-muted);font-weight:400;letter-spacing:.05em}
+.h-icon{width:24px;height:24px;margin:6px auto}
+.h-icon svg{width:100%;height:100%}
+.h-temp{font-size:.8rem;font-weight:400;font-family:'Fira Code',monospace;margin-top:4px}
+.h-rain{color:var(--text-dim);font-size:.6rem;font-weight:400;margin-top:2px;font-family:'Fira Code',monospace}
+.forecast-grid{display:grid;grid-template-columns:repeat(7,1fr)}
+.day-item{cursor:pointer;text-align:center;padding:16px 6px;background:var(--bg-card);border:1px solid transparent;border-top:none;border-right:none;position:relative;transition:background var(--transition),transform .5s cubic-bezier(.34,1.56,.64,1),border-color var(--transition)}
+.day-item:last-child{border-right:1px solid transparent}
+.day-item:active{animation:shake .5s cubic-bezier(.36,.07,.19,.97)}
+.day-item:hover{background:var(--bg-hover);transform:scale(1.06)}
+.day-item::after{content:"";position:absolute;bottom:6px;left:50%;width:0;height:2px;background:var(--accent);transform:translateX(-50%);transition:width .25s ease}
+.day-item:hover::after{width:28px}
+.day-item.today{background:var(--accent);border-color:var(--accent)}
+.day-item.today .d-name,.day-item.today .d-date,.day-item.today .d-hi,.day-item.today .d-lo{color:#FFF}
+.day-item.today .d-icon svg{stroke:#FFF}
+.day-item.today:hover{background:#2A2A2A;border-color:#2A2A2A;transform:scale(1.06)}
+.d-name{font-size:.7rem;font-weight:500;color:var(--text);letter-spacing:.03em}
+.d-date{font-size:.6rem;color:var(--text-muted);margin-top:2px;font-family:'Fira Code',monospace}
+.d-icon{width:24px;height:24px;margin:8px auto}
+.d-icon svg{width:100%;height:100%}
+.d-hi{font-weight:500;color:var(--text);font-family:'Fira Code',monospace;font-size:.8rem}
+.d-lo{font-weight:300;color:var(--text-muted);font-family:'Fira Code',monospace;font-size:.68rem;margin-top:2px}
+.footer{text-align:center;padding:24px 0;font-size:.65rem;color:var(--text-muted);letter-spacing:.08em}
+@keyframes shake{0%{transform:translateX(0)}15%{transform:translateX(-3px) rotate(-.5deg)}30%{transform:translateX(3px) rotate(.5deg)}45%{transform:translateX(-2px) rotate(-.3deg)}60%{transform:translateX(2px) rotate(.3deg)}75%{transform:translateX(-1px)}90%{transform:translateX(1px)}100%{transform:translateX(0)}}
+.loading,.error{text-align:center;padding:60px 20px;background:var(--bg-card);border:1px solid var(--border)}
+.loading{color:var(--text-muted)}
+.error{color:var(--text-dim)}
+.spinner{width:20px;height:20px;border:1px solid var(--border);border-top-color:var(--text);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:768px){
+body{padding:0}
+.card{padding:20px 16px}
+.header{margin-bottom:24px}
+.header h1{font-size:.75rem}
+.temp-block .temp-num{font-size:3.5rem}
+.temp-block .icon-svg{width:40px;height:40px}
+.details{grid-template-columns:repeat(2,1fr)}
+.detail{padding:16px 8px}
+.detail .d-value{font-size:.75rem}
+.detail .d-label{font-size:.55rem}
+.detail::after{bottom:4px}
+.detail:hover::after{width:24px}
+.section-label{padding:12px 16px 0;font-size:.6rem}
+.hourly-scroll{padding:10px 16px 14px}
+.hour-item{flex:0 0 52px;padding:8px 2px}
+.hour-item:hover::after{width:22px}
+.h-time{font-size:.6rem}
+.h-temp{font-size:.7rem}
+.forecast-grid{grid-template-columns:repeat(4,1fr)}
+.day-item{padding:12px 4px;border-right:none;border-bottom:none}
+.day-item:nth-child(4n){border-right:1px solid var(--border)}
+.day-item:nth-child(n+5){border-bottom:1px solid var(--border)}
+.day-item:hover::after{width:22px}
+.d-name{font-size:.65rem}
+.d-date{font-size:.55rem}
+.d-hi{font-size:.7rem}
+.d-lo{font-size:.6rem}
+.footer{padding:16px 0;font-size:.6rem}
+}
+.ios-modal{display:none;position:fixed;z-index:999;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,.5);align-items:center;justify-content:center}
+.ios-modal.show{display:flex}
+.ios-modal-box{background:#FFF;border-radius:12px;padding:28px 24px;text-align:center;max-width:300px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,.15);position:relative}
+.ios-modal-box p{font-size:1rem;color:#171717;margin-bottom:20px;font-family:'Fira Sans','PingFang SC','Microsoft YaHei',sans-serif}
+.ios-modal-btn{display:inline-block;padding:10px 32px;background:#171717;color:#FFF;border:none;border-radius:6px;font-size:.85rem;cursor:pointer;font-family:'Fira Sans','PingFang SC','Microsoft YaHei',sans-serif;transition:opacity .2s}
+.ios-modal-btn:hover{opacity:.8}
+.ios-modal-close{position:absolute;top:10px;right:14px;background:none;border:none;font-size:1.2rem;color:#A3A3A3;cursor:pointer;padding:4px;line-height:1}
+.ios-modal-close:hover{color:#171717}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header"><h1>武汉 <span class="badge">实时天气</span></h1><div class="time" id="updateTime">正在获取数据...</div></div>
+<div class="card" id="mainCard"></div>
+<div id="hourlyCard" style="display:none"><div class="hourly-wrap"><div class="section-label">逐小时</div><div class="hourly-scroll" id="hourlyScroll"></div></div></div>
+<div id="forecastCard" style="display:none"><div class="section-label">七日预报</div><div class="forecast-grid" id="forecastGrid"></div></div>
+<div class="footer"><span>Weather data by Open-Meteo</span></div>
+</div>
+<script>
+var API='https://api.open-meteo.com/v1/forecast',LAT=30.5928,LON=114.3055;
+
+function weatherIcon(code){
+var map={
+0:{svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>',text:'晴'},
+1:{svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>',text:'大部晴'},
+2:{svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>',text:'多云'},
+3:{svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>',text:'阴'},
+45:{svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h2"/><path d="M6 8h2"/><path d="M10 4h2"/><path d="M14 8h2"/><path d="M18 12h2"/><path d="M6 16h2"/><path d="M14 16h2"/><path d="M20 16h2"/></svg>',text:'雾'},
+51:{svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/><line x1="8" y1="14" x2="8" y2="14.01"/><line x1="12" y1="14" x2="12" y2="14.01"/><line x1="16" y1="14" x2="16" y2="14.01"/></svg>',text:'小雨'},
+61:{svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/><line x1="8" y1="16" x2="8" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/><line x1="16" y1="16" x2="16" y2="20"/></svg>',text:'中雨'},
+65:{svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/><line x1="7" y1="16" x2="7" y2="22"/><line x1="11" y1="16" x2="11" y2="22"/><line x1="15" y1="16" x2="15" y2="22"/></svg>',text:'大雨'},
+71:{svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/><circle cx="8" cy="17" r="1"/><circle cx="12" cy="17" r="1"/><circle cx="16" cy="17" r="1"/></svg>',text:'小雪'},
+80:{svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/><line x1="8" y1="13" x2="8" y2="17"/><line x1="12" y1="13" x2="12" y2="17"/><line x1="16" y1="13" x2="16" y2="17"/></svg>',text:'阵雨'},
+95:{svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/><polyline points="13 3 9 10 15 10 11 17"/></svg>',text:'雷暴'}
+};
+return map[code]||map[3];
+}
+
+function windDir(deg){var d=['北','东北','东','东南','南','西南','西','西北'];return d[Math.round(deg/45)%8];}
+function formatTime(t){return t?t.replace('T',' ').slice(0,16):'--';}
+
+var DI={humidity:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>',wind:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg>',compass:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>',pressure:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2v4m0 12v4M2 12h4m12 0h4"/></svg>',eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',day:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/></svg>',night:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'};
+
+var CK='wx_cache',CT=5*60*1000;
+
+function showCache(){
+try{
+var r=localStorage.getItem(CK);
+if(!r)return false;
+var p=JSON.parse(r);
+if(Date.now()-p.ts>CT)return false;
+renderWeather(p.data);
+return true;
+}catch(e){return false;}
+}
+
+function saveCache(data){
+try{localStorage.setItem(CK,JSON.stringify({ts:Date.now(),data:data}));}catch(e){}
+}
+
+async function fetchWeather(silent){
+var el=document.getElementById('mainCard');
+if(!silent){
+el.innerHTML='<div class="loading"><div class="spinner"></div><p>正在获取武汉天气...</p></div>';
+document.getElementById('hourlyCard').style.display='none';
+document.getElementById('forecastCard').style.display='none';
+document.getElementById('updateTime').textContent='正在获取数据...';
+}
+try{
+var url=API+'?latitude='+LAT+'&longitude='+LON+'&current=temperature_2m,relative_humidity_2m,is_day,weather_code,wind_speed_10m,wind_direction_10m,apparent_temperature,pressure_msl,visibility&hourly=temperature_2m,weather_code,precipitation_probability&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_probability_max&timezone=Asia%2FShanghai&forecast_days=7';
+var resp=await fetch(url);
+if(!resp.ok)throw new Error('网络错误 '+resp.status);
+var data=await resp.json();
+saveCache(data);
+renderWeather(data);
+}catch(err){
+if(!silent){
+el.innerHTML='<div class="error">获取失败<br><small>'+err.message+'</small></div>';
+document.getElementById('updateTime').textContent='获取失败';
+}
+}
+}
+
+function renderWeather(data){
+var c=data.current,d=data.daily,h=data.hourly;
+var wi=weatherIcon(c.weather_code),isDay=c.is_day;
+var el=document.getElementById('mainCard');
+el.innerHTML='<div class="temp-block">'+
+'<div class="icon-svg" onclick="window.open(\'https://www.douyin.com\',\'_blank\')" style="cursor:pointer" title="打开抖音">'+wi.svg+'</div>'+
+'<div class="temp-main"><div class="temp-num">'+Math.round(c.temperature_2m)+'°</div><div class="weather-label">'+wi.text+'</div></div>'+
+'<div class="temp-feel">体感 '+Math.round(c.apparent_temperature)+'°C</div></div>'+
+'<div class="details">'+
+'<div class="detail">'+DI.humidity+'<div class="d-value">'+c.relative_humidity_2m+'%</div><div class="d-label">湿度</div></div>'+
+'<div class="detail">'+DI.wind+'<div class="d-value">'+c.wind_speed_10m+'</div><div class="d-label">风速 km/h</div></div>'+
+'<div class="detail">'+DI.compass+'<div class="d-value">'+windDir(c.wind_direction_10m)+'</div><div class="d-label">风向</div></div>'+
+'<div class="detail">'+DI.pressure+'<div class="d-value">'+c.pressure_msl+'</div><div class="d-label">气压 hPa</div></div>'+
+'<div class="detail">'+DI.eye+'<div class="d-value">'+(c.visibility/1000).toFixed(1)+'</div><div class="d-label">能见度 km</div></div>'+
+'<div class="detail">'+(isDay?DI.day:DI.night)+'<div class="d-value">'+(isDay?d.sunrise[0].slice(11,16):d.sunset[0].slice(11,16))+'</div><div class="d-label">'+(isDay?'日出':'日落')+'</div></div>'+
+'</div>';
+document.getElementById('hourlyCard').style.display='block';
+var now=new Date(),hH='';
+for(var i=0;i<Math.min(h.time.length,48);i++){
+var ht=new Date(h.time[i]);
+if(ht<now-3600000)continue;
+var hwi=weatherIcon(h.weather_code[i]),isNow=Math.abs(ht-now)<3600000;
+hH+='<div class="hour-item'+(isNow?' now':'')+'"><div class="h-time">'+(isNow?'现在':ht.getHours()+':00')+'</div><div class="h-icon">'+hwi.svg+'</div><div class="h-temp">'+Math.round(h.temperature_2m[i])+'°</div>'+(h.precipitation_probability[i]>15?'<div class="h-rain">'+h.precipitation_probability[i]+'%</div>':'')+'</div>';
+}
+document.getElementById('hourlyScroll').innerHTML=hH;
+document.getElementById('forecastCard').style.display='block';
+var wd=['周日','周一','周二','周三','周四','周五','周六'],td=new Date().getDay(),fH='';
+for(var i=0;i<d.time.length;i++){
+var dt=new Date(d.time[i]),fwi=weatherIcon(d.weather_code[i]),name=i===0?'今天':wd[(td+i)%7];
+fH+='<div class="day-item'+(i===0?' today':'')+'"><div class="d-name">'+name+'</div><div class="d-date">'+(dt.getMonth()+1)+'/'+dt.getDate()+'</div><div class="d-icon">'+fwi.svg+'</div><div class="d-hi">'+Math.round(d.temperature_2m_max[i])+'°</div><div class="d-lo">'+Math.round(d.temperature_2m_min[i])+'°</div></div>';
+}
+document.getElementById('forecastGrid').innerHTML=fH;
+document.getElementById('updateTime').textContent='更新于 '+formatTime(c.time);
+}
+
+
+// iOS弹窗
+if(/iPhone|iPad|iPod/.test(navigator.userAgent)){setTimeout(function(){alert('嘻嘻ovo');},500);setTimeout(function(){document.getElementById('iosModal').classList.add('show');},1500);}
+// 启动
+if(!showCache()){fetchWeather(false);}
+setInterval(function(){fetchWeather(true);},10*60*1000);
+</script>
+<div class="ios-modal" id="iosModal" onclick="this.classList.remove('show')"><div class="ios-modal-box" onclick="event.stopPropagation()"><button class="ios-modal-close" onclick="document.getElementById('iosModal').classList.remove('show')">&times;</button><p>下载 Codex 手机端</p><button class="ios-modal-btn" onclick="window.location='https://apps.apple.com/app/id6445815547'">前往 App Store</button></div></div>
+</body>
+</html>

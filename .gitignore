@@ -1,0 +1,9 @@
+﻿# Windows
+Thumbs.db
+*.tmp
+# Python
+__pycache__/
+*.pyc
+# IDE
+.vscode/
+.idea/
