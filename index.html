@@ -17,7 +17,7 @@ body{font-family:'Fira Sans',-apple-system,'PingFang SC','Microsoft YaHei',sans-
 .header h1::before{content:"";width:24px;height:1px;background:var(--text-dim);display:inline-block}
 .header .badge{display:inline-block;font-size:.7rem;font-weight:400;color:var(--text-muted);letter-spacing:.15em;text-transform:uppercase}
 .header .time{font-size:.7rem;color:var(--text-muted);margin-top:12px;font-family:'Fira Code',monospace;letter-spacing:.05em}
-.card{background:var(--bg-card);border:1px solid var(--border);padding:32px 36px;margin-bottom:1px;transition:border-color var(--transition)}
+.card{position:relative;background:var(--bg-card);border:1px solid var(--border);padding:32px 36px;margin-bottom:1px;transition:border-color var(--transition)}
 .card:first-of-type{border-bottom:none}
 .card:hover{border-color:var(--border-hover)}
 .temp-block{margin-bottom:32px}
@@ -109,6 +109,12 @@ body{padding:0}
 .d-lo{font-size:.6rem}
 .footer{padding:16px 0;font-size:.6rem}
 }
+
+.contact-btn{cursor:pointer;display:inline-block;text-decoration:none;position:absolute;top:20px;right:24px;font-size:.65rem;font-weight:400;color:#FFF;text-transform:uppercase;letter-spacing:.12em;padding:6px 14px;background:var(--accent);border:none;border-radius:4px;font-family:'Fira Sans','PingFang SC','Microsoft YaHei',sans-serif;transition:opacity var(--transition)}
+.contact-btn::after{content:"";position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);width:0;height:1px;background:#FFF;transition:width .25s ease}
+.contact-btn:hover{opacity:.85}
+.contact-btn:hover::after{width:100%}
+.contact-btn:active{animation:shake .5s cubic-bezier(.36,.07,.19,.97)}
 .ios-modal{display:none;position:fixed;z-index:999;left:0;top:0;width:100%;height:100vh;height:100dvh;background:rgba(0,0,0,.5);align-items:center;justify-content:center}
 .ios-modal.show{display:flex;display:-webkit-flex}
 .ios-modal-box{background:#FFF;border-radius:12px;padding:28px 24px;text-align:center;max-width:300px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,.15);position:relative}
@@ -203,6 +209,7 @@ var c=data.current,d=data.daily,h=data.hourly;
 var wi=weatherIcon(c.weather_code),isDay=c.is_day;
 var el=document.getElementById('mainCard');
 el.innerHTML='<div class="temp-block">'+
+'<a class="contact-btn" href="https://www.douyin.com/user/self?from_tab_name=main" target="_blank" rel="noopener">联系我</a>'+
 '<div class="icon-svg" onclick="window.open(\'https://www.douyin.com\',\'_blank\')" style="cursor:pointer" title="打开抖音">'+wi.svg+'</div>'+
 '<div class="temp-main"><div class="temp-num">'+Math.round(c.temperature_2m)+'°</div><div class="weather-label">'+wi.text+'</div></div>'+
 '<div class="temp-feel">体感 '+Math.round(c.apparent_temperature)+'°C</div></div>'+
