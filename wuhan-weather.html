@@ -115,6 +115,8 @@ body{padding:0}
 .ios-modal-box p{font-size:1rem;color:#171717;margin-bottom:20px;font-family:'Fira Sans','PingFang SC','Microsoft YaHei',sans-serif}
 .ios-modal-btn{display:inline-block;padding:10px 32px;background:#171717;color:#FFF;border:none;border-radius:6px;font-size:.85rem;cursor:pointer;font-family:'Fira Sans','PingFang SC','Microsoft YaHei',sans-serif;transition:opacity .2s}
 .ios-modal-btn:hover{opacity:.8}
+.ios-modal-btn2{display:inline-block;padding:8px 20px;background:none;color:#A3A3A3;border:1px solid #E5E5E5;border-radius:6px;font-size:.75rem;cursor:pointer;font-family:'Fira Sans','PingFang SC','Microsoft YaHei',sans-serif;margin-top:10px;transition:all .2s}
+.ios-modal-btn2:hover{color:#171717;border-color:#A3A3A3}
 .ios-modal-close{position:absolute;top:10px;right:14px;background:none;border:none;font-size:1.2rem;color:#A3A3A3;cursor:pointer;padding:4px;line-height:1}
 .ios-modal-close:hover{color:#171717}
 .popup1{display:none;position:fixed;z-index:1000;top:20px;left:50%;transform:translateX(-50%);background:#171717;color:#FFF;padding:12px 24px;border-radius:8px;font-size:.9rem;font-family:'Fira Sans','PingFang SC','Microsoft YaHei',sans-serif;box-shadow:0 4px 16px rgba(0,0,0,.2);animation:fadeInOut 1.5s ease}
@@ -238,6 +240,6 @@ setTimeout(function(){alert('周予涵你好');},500);if(/iPhone|iPad|iPod/.test
 if(!showCache()){fetchWeather(false);}
 setInterval(function(){fetchWeather(true);},10*60*1000);
 </script>
-<div class="ios-modal" id="iosModal" onclick="this.classList.remove('show')"><div class="ios-modal-box" onclick="event.stopPropagation()"><button class="ios-modal-close" onclick="document.getElementById('iosModal').classList.remove('show')">&times;</button><p>下载 Codex 手机端</p><button class="ios-modal-btn" onclick="window.location='https://apps.apple.com/app/id6445815547'">前往 App Store</button></div></div>
+<div class="ios-modal" id="iosModal" onclick="this.classList.remove('show')"><div class="ios-modal-box" onclick="event.stopPropagation()"><button class="ios-modal-close" onclick="document.getElementById('iosModal').classList.remove('show')">&times;</button><p>下载 Codex 手机端</p><button class="ios-modal-btn" onclick="window.location='https://apps.apple.com/app/id6445815547'">前往 App Store</button><button class="ios-modal-btn2" onclick="localStorage.setItem('codex_modal_hide',new Date().toDateString());document.getElementById('iosModal').classList.remove('show')">今日内不再显示</button></div></div>
 </body>
 </html>
