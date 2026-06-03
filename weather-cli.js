@@ -49,8 +49,8 @@ async function main() {
     console.log('  node weather-cli.js [选项]');
     console.log('  -h, --help    帮助');
     console.log('  -s, --simple  简洁模式');
-    console.log('  -f, --full    完整模式（默认）
-  --no-cache    跳过缓存，强制联网获取');
+    console.log('  -f, --full    完整模式（默认）');
+    console.log('  --no-cache    跳过缓存，强制联网获取');
     console.log('');
     return;
   }
