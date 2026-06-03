@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -248,6 +248,16 @@ if(!showCache()){fetchWeather(false);}
 setInterval(function(){fetchWeather(true);},10*60*1000);
 </script>
 <div class="ios-modal" id="iosModal" onclick="this.classList.remove('show')"><div class="ios-modal-box" onclick="event.stopPropagation()"><button class="ios-modal-close" onclick="document.getElementById('iosModal').classList.remove('show')">&times;</button><p>下载 Codex 手机端</p><button class="ios-modal-btn" onclick="window.location='https://apps.apple.com/app/id6445815547'">前往 App Store</button><button class="ios-modal-btn2" onclick="localStorage.setItem('codex_modal_hide',new Date().toDateString());document.getElementById('iosModal').classList.remove('show')">今日内不再显示</button></div></div>
-</body>
+
+<!-- 百度统计 -->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?e47cf0c514b6f25d39395108aad69252";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script></body>
 </html>
 
