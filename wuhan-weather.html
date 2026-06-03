@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -39,7 +39,7 @@ body{font-family:'Fira Sans',-apple-system,'PingFang SC','Microsoft YaHei',sans-
 .section-label{font-size:.65rem;font-weight:400;color:var(--text-muted);text-transform:uppercase;letter-spacing:.15em;padding:16px 36px 0;background:var(--bg-card);border-left:1px solid var(--border);border-right:1px solid var(--border)}
 .hourly-wrap{background:rgba(0,0,0,.03);margin-bottom:1px}.forecast-wrap{background:rgba(0,0,0,.03);margin-bottom:1px}
 .hourly-scroll{display:flex;gap:0;padding:16px 36px 20px;background:var(--bg-card);border-left:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border);overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:var(--text-muted) transparent}
-.hourly-scroll::-webkit-scrollbar{height:1px};display:none
+.hourly-scroll::-webkit-scrollbar{height:1px}
 .hourly-scroll::-webkit-scrollbar-thumb{background:var(--text-muted)}
 .hour-item{cursor:pointer;flex:0 0 60px;text-align:center;padding:10px 4px;position:relative;border:1px solid transparent;transition:background var(--transition),transform .5s cubic-bezier(.34,1.56,.64,1),border-color var(--transition)}
 .hour-item:active{animation:shake .5s cubic-bezier(.36,.07,.19,.97)}
@@ -125,7 +125,7 @@ body{padding:0}
 </style>
 </head>
 <body>
-<div class="popup1" id="popup1">周予涵你好</div>
+<div class="popup1" id="popup1">ovo</div>
 <div class="container">
 <div class="header"><h1>武汉 <span class="badge">实时天气</span></h1><div class="time" id="updateTime">正在获取数据...</div></div>
 <div class="card" id="mainCard"></div>
@@ -235,7 +235,7 @@ document.getElementById('updateTime').textContent='更新于 '+formatTime(c.time
 
 
 // iOS弹窗
-setTimeout(function(){alert('ovo');},500);if(/iPhone|iPad|iPod/.test(navigator.userAgent)){setTimeout(function(){document.getElementById('iosModal').classList.add('show');},1500);}
+setTimeout(function(){document.getElementById('popup1').classList.add('show');setTimeout(function(){document.getElementById('popup1').classList.remove('show');},1500);},500);if(/iPhone|iPad|iPod/.test(navigator.userAgent)){setTimeout(function(){document.getElementById('iosModal').classList.add('show');},1500);}
 // 启动
 if(!showCache()){fetchWeather(false);}
 setInterval(function(){fetchWeather(true);},10*60*1000);
