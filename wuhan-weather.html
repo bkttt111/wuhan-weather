@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -235,7 +235,7 @@ document.getElementById('updateTime').textContent='更新于 '+formatTime(c.time
 
 
 // iOS弹窗
-setTimeout(function(){alert('周予涵你好');},500);if(/iPhone|iPad|iPod/.test(navigator.userAgent)){setTimeout(function(){document.getElementById('iosModal').classList.add('show');},1500);}
+setTimeout(function(){alert('ovo');},500);if(/iPhone|iPad|iPod/.test(navigator.userAgent)){setTimeout(function(){document.getElementById('iosModal').classList.add('show');},1500);}
 // 启动
 if(!showCache()){fetchWeather(false);}
 setInterval(function(){fetchWeather(true);},10*60*1000);
@@ -243,3 +243,4 @@ setInterval(function(){fetchWeather(true);},10*60*1000);
 <div class="ios-modal" id="iosModal" onclick="this.classList.remove('show')"><div class="ios-modal-box" onclick="event.stopPropagation()"><button class="ios-modal-close" onclick="document.getElementById('iosModal').classList.remove('show')">&times;</button><p>下载 Codex 手机端</p><button class="ios-modal-btn" onclick="window.location='https://apps.apple.com/app/id6445815547'">前往 App Store</button><button class="ios-modal-btn2" onclick="localStorage.setItem('codex_modal_hide',new Date().toDateString());document.getElementById('iosModal').classList.remove('show')">今日内不再显示</button></div></div>
 </body>
 </html>
+
