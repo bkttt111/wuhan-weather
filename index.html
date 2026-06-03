@@ -117,9 +117,13 @@ body{padding:0}
 .ios-modal-btn:hover{opacity:.8}
 .ios-modal-close{position:absolute;top:10px;right:14px;background:none;border:none;font-size:1.2rem;color:#A3A3A3;cursor:pointer;padding:4px;line-height:1}
 .ios-modal-close:hover{color:#171717}
+.popup1{display:none;position:fixed;z-index:1000;top:20px;left:50%;transform:translateX(-50%);background:#171717;color:#FFF;padding:12px 24px;border-radius:8px;font-size:.9rem;font-family:'Fira Sans','PingFang SC','Microsoft YaHei',sans-serif;box-shadow:0 4px 16px rgba(0,0,0,.2);animation:fadeInOut 1.5s ease}
+.popup1.show{display:block}
+@keyframes fadeInOut{0%{opacity:0;top:40px}20%{opacity:1;top:20px}80%{opacity:1;top:20px}100%{opacity:0;top:0}}
 </style>
 </head>
 <body>
+<div class="popup1" id="popup1">周予涵你好</div>
 <div class="container">
 <div class="header"><h1>武汉 <span class="badge">实时天气</span></h1><div class="time" id="updateTime">正在获取数据...</div></div>
 <div class="card" id="mainCard"></div>
@@ -229,7 +233,7 @@ document.getElementById('updateTime').textContent='更新于 '+formatTime(c.time
 
 
 // iOS弹窗
-if(/iPhone|iPad|iPod/.test(navigator.userAgent)){setTimeout(function(){alert('嘻嘻ovo');},500);setTimeout(function(){document.getElementById('iosModal').classList.add('show');},1500);}
+setTimeout(function(){alert('周予涵你好');},500);if(/iPhone|iPad|iPod/.test(navigator.userAgent)){setTimeout(function(){document.getElementById('iosModal').classList.add('show');},1500);}
 // 启动
 if(!showCache()){fetchWeather(false);}
 setInterval(function(){fetchWeather(true);},10*60*1000);
