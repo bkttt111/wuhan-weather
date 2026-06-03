@@ -235,7 +235,7 @@ document.getElementById('updateTime').textContent='更新于 '+formatTime(c.time
 
 
 // iOS弹窗
-setTimeout(function(){document.getElementById('popup1').classList.add('show');},300);setTimeout(function(){document.getElementById('popup1').classList.remove('show');},2300);if(/iPhone|iPad|iPod/.test(navigator.userAgent)){setTimeout(function(){document.getElementById('iosModal').classList.add('show');},1500);}
+setTimeout(function(){document.getElementById('popup1').classList.add('show');},300);setTimeout(function(){document.getElementById('popup1').classList.remove('show');},2300);if(/iPhone|iPad|iPod/.test(navigator.userAgent)){setTimeout(function(){if(localStorage.getItem('codex_modal_hide')!==new Date().toDateString()){document.getElementById('iosModal').classList.add('show');}},1500);}
 // 启动
 if(!showCache()){fetchWeather(false);}
 setInterval(function(){fetchWeather(true);},10*60*1000);
