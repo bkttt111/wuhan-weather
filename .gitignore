@@ -7,3 +7,6 @@ __pycache__/
 # IDE
 .vscode/
 .idea/
+
+# 访问日志（含访客IP隐私）
+output/
